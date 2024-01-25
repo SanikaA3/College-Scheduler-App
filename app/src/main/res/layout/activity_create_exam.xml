@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addClass"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/addClassButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:text="Add Class"
+        app:layout_constraintTop_toBottomOf="@+id/editInstructor"
+        tools:layout_editor_absoluteX="149dp" />
+
+    <EditText
+        android:id="@+id/editExamName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Course Name"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="75dp" />
+
+    <EditText
+        android:id="@+id/editTime"
+        android:layout_width="142dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="time"
+        android:text="Time"
+        app:layout_constraintTop_toBottomOf="@+id/editExamName"
+        tools:layout_editor_absoluteX="71dp" />
+
+    <Spinner
+        android:id="@+id/spinnerAMPM"
+        android:layout_width="113dp"
+        android:layout_height="43dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.117"
+        app:layout_constraintStart_toEndOf="@+id/editTime"
+        app:layout_constraintTop_toTopOf="@+id/editTime"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/editInstructor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Instructor"
+        app:layout_constraintTop_toBottomOf="@+id/editTime"
+        tools:layout_editor_absoluteX="100dp" />
+
+    <CheckBox
+        android:id="@+id/checkWednesday"
+        android:layout_width="110dp"
+        android:layout_height="44dp"
+        android:text="Wednesday"
+        tools:layout_editor_absoluteX="182dp"
+        tools:layout_editor_absoluteY="248dp" />
+
+    <CheckBox
+        android:id="@+id/checkThursday"
+        android:layout_width="95dp"
+        android:layout_height="44dp"
+        android:text="Thursday"
+        tools:layout_editor_absoluteX="292dp"
+        tools:layout_editor_absoluteY="248dp" />
+
+    <CheckBox
+        android:id="@+id/checkSunday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sunday"
+        tools:layout_editor_absoluteX="269dp"
+        tools:layout_editor_absoluteY="292dp" />
+
+    <CheckBox
+        android:id="@+id/checkTuesday"
+        android:layout_width="87dp"
+        android:layout_height="43dp"
+        android:text="Tuesday"
+        tools:layout_editor_absoluteX="95dp"
+        tools:layout_editor_absoluteY="248dp" />
+
+    <CheckBox
+        android:id="@+id/checkMonday"
+        android:layout_width="92dp"
+        android:layout_height="44dp"
+        android:text="Monday"
+        tools:layout_editor_absoluteX="13dp"
+        tools:layout_editor_absoluteY="248dp" />
+
+    <CheckBox
+        android:id="@+id/checkFriday"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:text="Friday"
+        tools:layout_editor_absoluteX="102dp"
+        tools:layout_editor_absoluteY="291dp" />
+
+    <CheckBox
+        android:id="@+id/checkSaturday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saturday"
+        tools:layout_editor_absoluteX="179dp"
+        tools:layout_editor_absoluteY="292dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
