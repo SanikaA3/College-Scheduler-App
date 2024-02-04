@@ -12,13 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme._2340CollegeScheduler"
         tools:targetApi="31">
-        <activity android:name=".AddClass"
+
+        <!-- Make WeekAtAGlanceActivity the first activity to launch -->
+        <activity android:name=".WeekAtAGlanceActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- Declare AddClass activity without it being the launcher -->
+        <activity android:name=".AddClass"
+            android:exported="true" />
 
     </application>
 

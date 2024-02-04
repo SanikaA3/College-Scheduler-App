@@ -3,13 +3,11 @@ package com.example.a2340collegescheduler;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
-import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,13 +36,10 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Start AddClass Activity
-                Intent intent = new Intent(MainActivity.this, AddClass.class);
-                startActivity(intent);
-            }
+        binding.fab.setOnClickListener(view -> {
+            // Start AddClass Activity
+            Intent intent = new Intent(MainActivity.this, AddClass.class);
+            startActivity(intent);
         });
     }
 
