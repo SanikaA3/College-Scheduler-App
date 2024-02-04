@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,19 +38,26 @@ public class AddClass extends AppCompatActivity {
         amPm = findViewById(R.id.spinnerAMPM);
         addButton = findViewById(R.id.addClassButton);
 
+        // Setup Spinner for AM/PM selection
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.ampm_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        amPm.setAdapter(adapter);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveClass();
+                finish(); // Close this activity and go back to WeekAtAGlanceActivity
             }
         });
     }
 
     private void saveClass() {
-        String courseName = courseText.getText().toString();
-        String time = timeText.getText().toString() + " " + amPm.getSelectedItem().toString();
-        String instructorName = instructor.getText().toString();
-        boolean[] days = new boolean[]{
+        String courseName = courseText.getText().toString().trim();
+        String time = timeText.getText().toString().trim() + " " + amPm.getSelectedItem().toString();
+        String instructorName = instructor.getText().toString().trim();
+        boolean[] days = {
                 monday.isChecked(),
                 tuesday.isChecked(),
                 wednesday.isChecked(),
@@ -68,10 +76,8 @@ public class AddClass extends AppCompatActivity {
         editor.putString(courseName, json);
         editor.apply();
 
-        Log.d("AddClass", "Class added successfully: " + json);
-
         Toast.makeText(AddClass.this, "Class added successfully!", Toast.LENGTH_SHORT).show();
-        clearFields();
+        Log.d("AddClass", "Class added successfully: " + json); // For debugging purposes
     }
 
     private void clearFields() {
@@ -85,6 +91,6 @@ public class AddClass extends AppCompatActivity {
         friday.setChecked(false);
         saturday.setChecked(false);
         sunday.setChecked(false);
-        amPm.setSelection(0); // Assuming your Spinner is properly set up with an ArrayAdapter
+        amPm.setSelection(0);
     }
 }

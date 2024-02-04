@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,10 +11,10 @@
         android:text="Add Class"
         android:layout_margin="16dp"/>
 
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <HorizontalScrollView
@@ -25,21 +24,20 @@
             <TableLayout
                 android:id="@+id/weekTable"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:stretchColumns="*">
+                android:layout_height="match_parent">
 
                 <TableRow
                     android:background="@android:color/darker_gray"
                     android:padding="4dp">
 
-                    <TextView android:text="Time/Day" android:padding="4dp"/>
-                    <TextView android:text="Monday" android:padding="4dp"/>
-                    <TextView android:text="Tuesday" android:padding="4dp"/>
-                    <TextView android:text="Wednesday" android:padding="4dp"/>
-                    <TextView android:text="Thursday" android:padding="4dp"/>
-                    <TextView android:text="Friday" android:padding="4dp"/>
-                    <TextView android:text="Saturday" android:padding="4dp"/>
-                    <TextView android:text="Sunday" android:padding="4dp"/>
+                    <!-- Specify a minimum width for each TextView to ensure they are not too scrunched -->
+                    <TextView android:text="Monday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Tuesday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Wednesday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Thursday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Friday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Saturday" android:padding="4dp" android:minWidth="120dp"/>
+                    <TextView android:text="Sunday" android:padding="4dp" android:minWidth="120dp"/>
                 </TableRow>
 
                 <!-- Dynamic rows will be added here -->
