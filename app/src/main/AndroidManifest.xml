@@ -26,6 +26,11 @@
         <activity android:name=".AddClass"
             android:exported="true" />
 
+        <activity android:name=".AddAssignmentActivity"
+            android:label="Add Assignment">
+        </activity>
+
+
     </application>
 
 </manifest>

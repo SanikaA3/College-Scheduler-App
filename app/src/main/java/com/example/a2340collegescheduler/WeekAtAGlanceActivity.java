@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,22 +30,31 @@ import java.util.List;
 
 public class WeekAtAGlanceActivity extends AppCompatActivity {
 
+    private ListView listViewAssignments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.week_at_a_glance);
 
-        populateWeekView();
+        listViewAssignments = findViewById(R.id.listViewAssignments);
 
         Button addClassButton = findViewById(R.id.addClassButton);
-        addClassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddClass.class);
-                startActivity(intent);
-            }
+        addClassButton.setOnClickListener(view -> {
+            Intent intent = new Intent(WeekAtAGlanceActivity.this, AddClass.class);
+            startActivity(intent);
         });
+
+        Button btnAddAssignment = findViewById(R.id.btnAddAssignment);
+        btnAddAssignment.setOnClickListener(view -> {
+            Intent intent = new Intent(WeekAtAGlanceActivity.this, AddAssignmentActivity.class);
+            startActivity(intent);
+        });
+
+        populateWeekView();
+        populateAssignmentListView();
     }
+
 
     private void sortClassesByTime(List<ClassDetails> classes) {
         final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm"); // Assuming your time format is like "14:00"
@@ -106,6 +117,21 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         }
     }
 
+    private void populateAssignmentListView() {
+        List<Assignment> assignments = retrieveAssignments();
+        List<String> assignmentDetails = new ArrayList<>();
+        for (Assignment assignment : assignments) {
+            // Include due time and AM/PM in the detail string
+            String detail = assignment.getTitle() + " - " + assignment.getAssociatedClass() +
+                    " - Due: " + assignment.getDueDate() + " " + assignment.getDueTime() + " " + assignment.getAmPm();
+            assignmentDetails.add(detail);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, assignmentDetails);
+        listViewAssignments.setAdapter(adapter);
+    }
+
+
 
 
     private List<ClassDetails> retrieveClasses() {
@@ -123,6 +149,23 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
 
         return classDetailsList;
     }
+
+    private List<Assignment> retrieveAssignments() {
+        SharedPreferences prefs = getSharedPreferences("Assignments", MODE_PRIVATE);
+        Map<String, ?> allEntries = prefs.getAll();
+        List<Assignment> assignments = new ArrayList<>();
+        Gson gson = new Gson();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            String json = entry.getValue().toString();
+            Type type = new TypeToken<Assignment>(){}.getType();
+            Assignment assignment = gson.fromJson(json, type);
+            assignments.add(assignment);
+        }
+
+        return assignments;
+    }
+
 
     private void confirmAndDeleteClass(String courseName) {
         new AlertDialog.Builder(this)
@@ -149,6 +192,7 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         populateWeekView(); // Refresh your week view
+        populateAssignmentListView(); // Refresh assignments list
     }
 
 

@@ -4,12 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/addClassButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Class"
-        android:layout_margin="16dp"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,4 +39,27 @@
             </TableLayout>
         </HorizontalScrollView>
     </ScrollView>
+    <Button
+        android:id="@+id/btnAddAssignment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Assignment"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/addClassButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Class"
+        android:layout_margin="16dp"/>
+
+    <ListView
+        android:id="@+id/listViewAssignments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+    </ListView>
+
 </LinearLayout>
