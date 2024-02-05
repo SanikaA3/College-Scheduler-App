@@ -126,7 +126,7 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
     private void populateAssignmentListView() {
         List<Assignment> assignments = retrieveAssignments();
         List<String> assignmentDetails = new ArrayList<>();
-        final List<String> assignmentTitles = new ArrayList<>(); // Store the titles for deletion
+        final List<String> assignmentTitles = new ArrayList<>();
 
         for (Assignment assignment : assignments) {
             String detail = assignment.getTitle() + " - " + assignment.getAssociatedClass() +
@@ -185,25 +185,42 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
 
 
     private void confirmAndDeleteClass(String courseName) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Class")
-                .setMessage("Are you sure you want to delete this class?")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    deleteClass(courseName);
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        String[] options = {"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Option");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddClass.class);
+                intent.putExtra("courseName", courseName);
+                intent.putExtra("editMode", true);
+                startActivity(intent);
+            } else if (which == 1) {
+                deleteClass(courseName);
+            }
+        });
+        builder.show();
     }
 
-    private void confirmAndDeleteAssignment(final String assignmentTitle) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Assignment")
-                .setMessage("Are you sure you want to delete this assignment?")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteAssignment(assignmentTitle))
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+
+    private void confirmAndDeleteAssignment(String assignmentTitle) {
+        String[] options = {"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Option");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddAssignmentActivity.class);
+                intent.putExtra("assignmentTitle", assignmentTitle);
+                intent.putExtra("editMode", true);
+                startActivity(intent);
+            } else if (which == 1) {
+                deleteAssignment(assignmentTitle);
+            }
+        });
+        builder.show();
     }
+
 
 
 

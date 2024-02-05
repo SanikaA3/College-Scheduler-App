@@ -20,6 +20,8 @@ public class AddAssignmentActivity extends AppCompatActivity {
     private EditText editAssignmentTitle, editDueDate, editDueTime;
     private Spinner spinnerAMPM, spinnerAssociatedClass;
     private Button addAssignmentButton;
+    private String originalAssignmentTitle = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,28 @@ public class AddAssignmentActivity extends AppCompatActivity {
         setupDatePicker();
         setupSaveButton();
         populateClassSpinner();
+
+        if (getIntent().getBooleanExtra("editMode", false)) {
+            originalAssignmentTitle = getIntent().getStringExtra("assignmentTitle");
+            loadAssignmentDetails(originalAssignmentTitle);
+        }
     }
+
+    private void loadAssignmentDetails(String assignmentTitle) {
+        SharedPreferences prefs = getSharedPreferences("Assignments", MODE_PRIVATE);
+        String json = prefs.getString(assignmentTitle, null);
+        if (json != null) {
+            Gson gson = new Gson();
+            Assignment assignment = gson.fromJson(json, Assignment.class);
+
+            editAssignmentTitle.setText(assignment.getTitle());
+            editDueDate.setText(assignment.getDueDate());
+            editDueTime.setText(assignment.getDueTime());
+
+        }
+    }
+
+
 
     private void initializeUI() {
         editAssignmentTitle = findViewById(R.id.editAssignmentTitle);
@@ -48,7 +71,7 @@ public class AddAssignmentActivity extends AppCompatActivity {
 
     private void setupDatePicker() {
         editDueDate.setOnClickListener(view -> {
-            final Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -103,8 +126,11 @@ public class AddAssignmentActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(assignment);
-        String key = assignment.getTitle();
-        editor.putString(key, json);
+
+        if (originalAssignmentTitle != null && !originalAssignmentTitle.equals(assignment.getTitle())) {
+            editor.remove(originalAssignmentTitle);
+        }
+        editor.putString(assignment.getTitle(), json);
         editor.apply();
 
         finish();

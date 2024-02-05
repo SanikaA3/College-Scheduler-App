@@ -16,6 +16,7 @@ public class AddClass extends AppCompatActivity {
     private CheckBox monday, tuesday, wednesday, thursday, friday, saturday, sunday;
     private Spinner amPm;
     private Button addButton;
+    private String originalCourseName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +41,32 @@ public class AddClass extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         amPm.setAdapter(adapter);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveClass();
-                finish();
-            }
+        addButton.setOnClickListener(v -> {
+            saveClass();
+            finish();
         });
+
+        if (getIntent().getBooleanExtra("editMode", false)) {
+            originalCourseName = getIntent().getStringExtra("courseName");
+            loadClassDetailsForEdit(originalCourseName);
+        }
     }
 
+    private void loadClassDetailsForEdit(String courseName) {
+        SharedPreferences prefs = getSharedPreferences("ClassDetails", MODE_PRIVATE);
+        String json = prefs.getString(courseName, null);
+        if (json != null) {
+            Gson gson = new Gson();
+            ClassDetails classDetails = gson.fromJson(json, ClassDetails.class);
+
+            courseText.setText(classDetails.getCourseName());
+            instructor.setText(classDetails.getInstructor());
+        }
+    }
+
+
     private void saveClass() {
-        String courseName = courseText.getText().toString().trim();
+        String newCourseName = courseText.getText().toString().trim();
         String time = timeText.getText().toString().trim() + " " + amPm.getSelectedItem().toString();
         String instructorName = instructor.getText().toString().trim();
         boolean[] days = {
@@ -63,15 +79,25 @@ public class AddClass extends AppCompatActivity {
                 sunday.isChecked()
         };
 
-        ClassDetails classDetails = new ClassDetails(courseName, time, instructorName, days);
+        ClassDetails classDetails = new ClassDetails(newCourseName, time, instructorName, days);
 
         SharedPreferences prefs = getSharedPreferences("ClassDetails", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(classDetails);
-        editor.putString(courseName, json);
+
+
+        if (originalCourseName != null && !originalCourseName.equals(newCourseName)) {
+            editor.remove(originalCourseName);
+        }
+
+
+        editor.putString(newCourseName, json);
         editor.apply();
+
+        finish();
     }
+
 
     private void clearFields() {
         courseText.setText("");
