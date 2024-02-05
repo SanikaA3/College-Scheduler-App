@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -121,18 +122,31 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
     }
 
 
+
     private void populateAssignmentListView() {
         List<Assignment> assignments = retrieveAssignments();
         List<String> assignmentDetails = new ArrayList<>();
+        final List<String> assignmentTitles = new ArrayList<>(); // Store the titles for deletion
+
         for (Assignment assignment : assignments) {
             String detail = assignment.getTitle() + " - " + assignment.getAssociatedClass() +
                     " - Due: " + assignment.getDueDate() + " " + assignment.getDueTime() + " " + assignment.getAmPm();
             assignmentDetails.add(detail);
+            assignmentTitles.add(assignment.getTitle()); // Assuming title is the key
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, assignmentDetails);
         listViewAssignments.setAdapter(adapter);
+
+        listViewAssignments.setOnItemLongClickListener((parent, view, position, id) -> {
+            String assignmentTitle = assignmentTitles.get(position);
+            confirmAndDeleteAssignment(assignmentTitle);
+            return true;
+        });
     }
+
+
+
 
 
 
@@ -182,14 +196,37 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void confirmAndDeleteAssignment(final String assignmentTitle) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Assignment")
+                .setMessage("Are you sure you want to delete this assignment?")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> deleteAssignment(assignmentTitle))
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+    }
+
+
+
     private void deleteClass(String courseName) {
         SharedPreferences prefs = getSharedPreferences("ClassDetails", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(courseName);
         editor.apply();
-
         populateWeekView();
     }
+
+    private void deleteAssignment(String assignmentTitle) {
+        SharedPreferences prefs = getSharedPreferences("Assignments", MODE_PRIVATE);
+        if (prefs.contains(assignmentTitle)) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove(assignmentTitle);
+            editor.apply();
+
+            populateAssignmentListView();
+        }
+    }
+
+
 
     @Override
     protected void onResume() {

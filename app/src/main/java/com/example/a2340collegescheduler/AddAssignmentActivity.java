@@ -103,10 +103,11 @@ public class AddAssignmentActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(assignment);
-        String key = "Assignment_" + System.currentTimeMillis();
+        String key = assignment.getTitle();
         editor.putString(key, json);
         editor.apply();
 
         finish();
     }
+
 }
