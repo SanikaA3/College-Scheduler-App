@@ -6,9 +6,8 @@ public class ClassDetails implements Serializable {
     private String courseName;
     private String time;
     private String instructor;
-    private boolean[] days; // This should be an array of booleans, not a String.
+    private boolean[] days;
 
-    // Corrected Constructor
     public ClassDetails(String courseName, String time, String instructor, boolean[] days) {
         this.courseName = courseName;
         this.time = time;

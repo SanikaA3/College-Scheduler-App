@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 
 public class WeekAtAGlanceActivity extends AppCompatActivity {
@@ -57,54 +53,61 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
 
 
     private void sortClassesByTime(List<ClassDetails> classes) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm"); // Assuming your time format is like "14:00"
-        Collections.sort(classes, (class1, class2) -> {
-            try {
-                Date time1 = sdf.parse(class1.getTime());
-                Date time2 = sdf.parse(class2.getTime());
-                return time1.compareTo(time2);
-            } catch (ParseException e) {
-                e.printStackTrace(); // Handle parsing exceptions appropriately
-                return 0;
+        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        for (int i = 0; i < classes.size() - 1; i++) {
+            for (int j = i + 1; j < classes.size(); j++) {
+                try {
+                    Date time1 = sdf.parse(classes.get(i).getTime());
+                    Date time2 = sdf.parse(classes.get(j).getTime());
+                    if (time1.after(time2)) {
+                        ClassDetails temp = classes.get(i);
+                        classes.set(i, classes.get(j));
+                        classes.set(j, temp);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+        }
     }
+
 
 
 
     private void populateWeekView() {
         TableLayout weekTable = findViewById(R.id.weekTable);
 
-        // Retrieve and sort classes
         List<ClassDetails> classes = retrieveClasses();
         sortClassesByTime(classes);
 
-        // Clear existing table rows, except for the header row
-        weekTable.removeViews(1, weekTable.getChildCount() - 1);
+        for (int i = weekTable.getChildCount() - 1; i > 0; i--) {
+            weekTable.removeViewAt(i);
+        }
 
-        for (ClassDetails classDetail : classes) {
+        for (int i = 0; i < classes.size(); i++) {
+            ClassDetails classDetail = classes.get(i);
             TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             row.setPadding(0, 0, 0, 20); // Add padding below each row for better separation
 
-            // Setting tag for identifying the row for deletion
             row.setTag(classDetail.getCourseName());
 
-            // Long press listener for row to initiate class deletion
-            row.setOnLongClickListener(v -> {
-                String courseName = v.getTag().toString();
-                confirmAndDeleteClass(courseName);
-                return true; // Indicates the callback consumed the long press
+
+            row.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    String courseName = (String) v.getTag();
+                    confirmAndDeleteClass(courseName);
+                    return true;
+                }
             });
 
-            // Loop through days of the week
-            for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
                 TextView dayView = new TextView(this);
                 dayView.setPadding(8, 8, 8, 8);
-                dayView.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f)); // Equal weight
+                dayView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 
-                // Check if class occurs on this day and set text accordingly
-                if (classDetail.getDays()[i]) {
+                if (classDetail.getDays()[j]) {
                     String displayText = classDetail.getCourseName() + "\n" + classDetail.getTime() + "\nInstructor: " + classDetail.getInstructor();
                     dayView.setText(displayText);
                 } else {
@@ -117,11 +120,11 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         }
     }
 
+
     private void populateAssignmentListView() {
         List<Assignment> assignments = retrieveAssignments();
         List<String> assignmentDetails = new ArrayList<>();
         for (Assignment assignment : assignments) {
-            // Include due time and AM/PM in the detail string
             String detail = assignment.getTitle() + " - " + assignment.getAssociatedClass() +
                     " - Due: " + assignment.getDueDate() + " " + assignment.getDueTime() + " " + assignment.getAmPm();
             assignmentDetails.add(detail);
@@ -191,8 +194,8 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        populateWeekView(); // Refresh your week view
-        populateAssignmentListView(); // Refresh assignments list
+        populateWeekView();
+        populateAssignmentListView();
     }
 
 

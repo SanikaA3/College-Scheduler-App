@@ -3,12 +3,10 @@ package com.example.a2340collegescheduler;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
@@ -42,7 +40,6 @@ public class AddAssignmentActivity extends AppCompatActivity {
         spinnerAMPM = findViewById(R.id.spinnerAMPM);
         addAssignmentButton = findViewById(R.id.addAssignmentButton);
 
-        // Populate the AM/PM spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ampm_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -106,11 +103,10 @@ public class AddAssignmentActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(assignment);
-        String key = "Assignment_" + System.currentTimeMillis(); // Using current time as unique key
+        String key = "Assignment_" + System.currentTimeMillis();
         editor.putString(key, json);
         editor.apply();
 
-        Toast.makeText(this, "Assignment added successfully!", Toast.LENGTH_SHORT).show();
-        finish(); // Close the activity and go back
+        finish();
     }
 }

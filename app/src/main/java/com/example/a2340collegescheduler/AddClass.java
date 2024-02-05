@@ -2,14 +2,12 @@ package com.example.a2340collegescheduler;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 import com.google.gson.Gson;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +22,6 @@ public class AddClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_classes);
 
-        // Initialize UI components
         courseText = findViewById(R.id.editCourseName);
         timeText = findViewById(R.id.editTime);
         instructor = findViewById(R.id.editInstructor);
@@ -38,7 +35,6 @@ public class AddClass extends AppCompatActivity {
         amPm = findViewById(R.id.spinnerAMPM);
         addButton = findViewById(R.id.addClassButton);
 
-        // Setup Spinner for AM/PM selection
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ampm_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -48,7 +44,7 @@ public class AddClass extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveClass();
-                finish(); // Close this activity and go back to WeekAtAGlanceActivity
+                finish();
             }
         });
     }
@@ -75,9 +71,6 @@ public class AddClass extends AppCompatActivity {
         String json = gson.toJson(classDetails);
         editor.putString(courseName, json);
         editor.apply();
-
-        Toast.makeText(AddClass.this, "Class added successfully!", Toast.LENGTH_SHORT).show();
-        Log.d("AddClass", "Class added successfully: " + json); // For debugging purposes
     }
 
     private void clearFields() {
