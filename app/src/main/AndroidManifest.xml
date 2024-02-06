@@ -32,6 +32,10 @@
             android:label="Add Exam">
         </activity>
 
+        <activity android:name=".AddToDo"
+            android:label="Add Task">
+        </activity>
+
 
     </application>
 

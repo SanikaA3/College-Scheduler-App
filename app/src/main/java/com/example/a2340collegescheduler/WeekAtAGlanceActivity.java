@@ -57,29 +57,20 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
             }
         });
 
+        Button btnAddTask = findViewById(R.id.btnAddTask);
+        btnAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddToDo.class);
+                startActivity(intent);
+            }
+        });
+
         populateWeekView();
         populateListView();
     }
 
 
-    private void sortClassesByTime(List<ClassDetails> classes) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        for (int i = 0; i < classes.size() - 1; i++) {
-            for (int j = i + 1; j < classes.size(); j++) {
-                try {
-                    Date time1 = sdf.parse(classes.get(i).getTime());
-                    Date time2 = sdf.parse(classes.get(j).getTime());
-                    if (time1.after(time2)) {
-                        ClassDetails temp = classes.get(i);
-                        classes.set(i, classes.get(j));
-                        classes.set(j, temp);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
 
 
@@ -88,7 +79,6 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         TableLayout weekTable = findViewById(R.id.weekTable);
 
         List<ClassDetails> classes = retrieveClasses();
-        sortClassesByTime(classes);
 
         for (int i = weekTable.getChildCount() - 1; i > 0; i--) {
             weekTable.removeViewAt(i);
@@ -135,8 +125,18 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
     private void populateListView() {
         List<Assignment> assignments = retrieveAssignments();
         List<Exam> exams = retrieveExams();
+        List<ToDoTask> toDoTasks = retrieveToDoTasks();
         List<String> listViewItems = new ArrayList<>();
         final List<String> itemTypes = new ArrayList<>(); // Keep track of whether an item is an assignment or an exam
+        for (ToDoTask task : toDoTasks) {
+            listViewItems.add("Task: " + task.getTaskDescription());
+            itemTypes.add("Task");
+        }
+
+        if (!toDoTasks.isEmpty()) {
+            listViewItems.add("------ Assignments & Exams ------");
+            itemTypes.add("Divider");
+        }
 
         for (Assignment assignment : assignments) {
             String detail = "Assignment: " + assignment.getTitle() + " - " + assignment.getAssociatedClass() +
@@ -163,6 +163,9 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
             } else if ("Exam".equals(itemType)) {
                 String examName = listViewItems.get(position).split(" - ")[0].replace("Exam: ", "").trim();
                 confirmAndEditOrDeleteExam(examName);
+            } else if ("Task".equals(itemType)) {
+                String taskDescription = listViewItems.get(position).replace("Task: ", "").trim();
+                confirmAndEditOrDeleteTask(taskDescription);
             }
             return true;
         });
@@ -223,6 +226,23 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         return exams;
     }
 
+    private List<ToDoTask> retrieveToDoTasks() {
+        SharedPreferences prefs = getSharedPreferences("ToDoTasks", MODE_PRIVATE);
+        Map<String, ?> allEntries = prefs.getAll();
+        List<ToDoTask> toDoTasks = new ArrayList<>();
+        Gson gson = new Gson();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            String json = entry.getValue().toString();
+            Type type = new TypeToken<ToDoTask>(){}.getType();
+            ToDoTask task = gson.fromJson(json, type);
+            toDoTasks.add(task);
+        }
+
+        return toDoTasks;
+    }
+
+
 
 
     private void confirmAndDeleteClass(String courseName) {
@@ -280,6 +300,25 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void confirmAndEditOrDeleteTask(String taskDescription) {
+        String[] options = {"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Option");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddToDo.class);
+                intent.putExtra("taskDescription", taskDescription);
+                intent.putExtra("editMode", true);
+                startActivity(intent);
+            } else if (which == 1) {
+                deleteTask(taskDescription);
+            }
+        });
+        builder.show();
+    }
+
+
 
 
 
@@ -314,6 +353,16 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
 
         populateListView();
     }
+
+    private void deleteTask(String taskDescription) {
+        SharedPreferences prefs = getSharedPreferences("ToDoTasks", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(taskDescription);
+        editor.apply();
+
+        populateListView();
+    }
+
 
 
     @Override
