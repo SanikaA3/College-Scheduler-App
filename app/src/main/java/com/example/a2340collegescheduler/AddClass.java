@@ -24,6 +24,7 @@ public class AddClass extends AppCompatActivity {
 
         courseText = findViewById(R.id.editCourseName);
         timeText = findViewById(R.id.editTime);
+        instructor = findViewById(R.id.editInstructor);
         monday = findViewById(R.id.checkMonday);
         tuesday = findViewById(R.id.checkTuesday);
         wednesday = findViewById(R.id.checkWednesday);

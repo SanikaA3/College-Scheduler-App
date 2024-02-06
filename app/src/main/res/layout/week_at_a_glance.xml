@@ -39,38 +39,41 @@
             </TableLayout>
         </HorizontalScrollView>
     </ScrollView>
-    <Button
-        android:id="@+id/btnAddAssignment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Assignment"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
-        android:id="@+id/addClassButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Class"
-        android:layout_margin="16dp"/>
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
 
-    <Button
-        android:id="@+id/btnAddExam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Exam"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@id/btnAddAssignment" />
+        <Button
+            android:id="@+id/btnAddAssignment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Assignment"
+            android:layout_margin="8dp"/>
 
-    <Button
-        android:id="@+id/btnAddTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Task"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:id="@+id/addClassButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Class"
+            android:layout_margin="8dp"/>
+
+        <Button
+            android:id="@+id/btnAddExam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Exam"
+            android:layout_margin="8dp"/>
+
+        <Button
+            android:id="@+id/btnAddTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Task"
+            android:layout_margin="8dp"/>
+    </LinearLayout>
 
 
 
