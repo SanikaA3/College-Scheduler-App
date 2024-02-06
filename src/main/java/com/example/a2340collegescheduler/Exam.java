@@ -1,27 +1,27 @@
 package com.example.a2340collegescheduler;
 
 public class Exam {
-    public String id;
-    public String date;
+    public String courseName;
+    public boolean[] date;
     public String time;
     public String location;
 
-    public Exam(String id, String date, String time, String location) {
-        this.id = id;
+    public Exam(String id, boolean[] date, String time, String location) {
+        this.courseName = id;
         this.date = date;
         this.time = time;
         this.location = location;
     }
-    public String getId() {
-        return id;
+    public String getCourseName() {
+        return courseName;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
-    public String getDate() {
+    public boolean[] getDate() {
         return date;
     }
-    public void setDate(String date) {
+    public void setDate(boolean[] date) {
         this.date = date;
     }
     public String getTime() {
