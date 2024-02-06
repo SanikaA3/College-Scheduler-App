@@ -53,8 +53,6 @@ public class AddAssignmentActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void initializeUI() {
         editAssignmentTitle = findViewById(R.id.editAssignmentTitle);
         editDueDate = findViewById(R.id.editDueDate);

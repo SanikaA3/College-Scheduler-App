@@ -2,7 +2,6 @@ package com.example.a2340collegescheduler;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,7 +24,6 @@ public class AddClass extends AppCompatActivity {
 
         courseText = findViewById(R.id.editCourseName);
         timeText = findViewById(R.id.editTime);
-        instructor = findViewById(R.id.editInstructor);
         monday = findViewById(R.id.checkMonday);
         tuesday = findViewById(R.id.checkTuesday);
         wednesday = findViewById(R.id.checkWednesday);
@@ -64,7 +62,6 @@ public class AddClass extends AppCompatActivity {
         }
     }
 
-
     private void saveClass() {
         String newCourseName = courseText.getText().toString().trim();
         String time = timeText.getText().toString().trim() + " " + amPm.getSelectedItem().toString();
@@ -90,14 +87,10 @@ public class AddClass extends AppCompatActivity {
         if (originalCourseName != null && !originalCourseName.equals(newCourseName)) {
             editor.remove(originalCourseName);
         }
-
-
         editor.putString(newCourseName, json);
         editor.apply();
-
         finish();
     }
-
 
     private void clearFields() {
         courseText.setText("");

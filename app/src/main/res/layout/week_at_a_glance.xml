@@ -55,6 +55,21 @@
         android:text="Add Class"
         android:layout_margin="16dp"/>
 
+    <Button
+        android:id="@+id/btnAddExam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Exam"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/btnAddAssignment" />
+
+    <Spinner
+        android:id="@+id/classSelectionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
     <ListView
         android:id="@+id/listViewAssignments"
         android:layout_width="match_parent"

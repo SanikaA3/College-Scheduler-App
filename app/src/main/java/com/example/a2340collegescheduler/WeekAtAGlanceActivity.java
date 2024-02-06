@@ -48,8 +48,17 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button btnAddExam = findViewById(R.id.btnAddExam);
+        btnAddExam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddExam.class);
+                startActivity(intent);
+            }
+        });
+
         populateWeekView();
-        populateAssignmentListView();
+        populateListView();
     }
 
 
@@ -123,27 +132,42 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
 
 
 
-    private void populateAssignmentListView() {
+    private void populateListView() {
         List<Assignment> assignments = retrieveAssignments();
-        List<String> assignmentDetails = new ArrayList<>();
-        final List<String> assignmentTitles = new ArrayList<>();
+        List<Exam> exams = retrieveExams();
+        List<String> listViewItems = new ArrayList<>();
+        final List<String> itemTypes = new ArrayList<>(); // Keep track of whether an item is an assignment or an exam
 
         for (Assignment assignment : assignments) {
-            String detail = assignment.getTitle() + " - " + assignment.getAssociatedClass() +
+            String detail = "Assignment: " + assignment.getTitle() + " - " + assignment.getAssociatedClass() +
                     " - Due: " + assignment.getDueDate() + " " + assignment.getDueTime() + " " + assignment.getAmPm();
-            assignmentDetails.add(detail);
-            assignmentTitles.add(assignment.getTitle()); // Assuming title is the key
+            listViewItems.add(detail);
+            itemTypes.add("Assignment");
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, assignmentDetails);
+        for (Exam exam : exams) {
+            String detail = "Exam: " + exam.getName() + " - " + exam.getLocation() +
+                    " - Date: " + exam.getDate() + " " + exam.getTime() + " " + exam.getAmPm();
+            listViewItems.add(detail);
+            itemTypes.add("Exam");
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listViewItems);
         listViewAssignments.setAdapter(adapter);
 
         listViewAssignments.setOnItemLongClickListener((parent, view, position, id) -> {
-            String assignmentTitle = assignmentTitles.get(position);
-            confirmAndDeleteAssignment(assignmentTitle);
+            String itemType = itemTypes.get(position);
+            if ("Assignment".equals(itemType)) {
+                String assignmentTitle = listViewItems.get(position).split(" - ")[0].replace("Assignment: ", "").trim();
+                confirmAndDeleteAssignment(assignmentTitle);
+            } else if ("Exam".equals(itemType)) {
+                String examName = listViewItems.get(position).split(" - ")[0].replace("Exam: ", "").trim();
+                confirmAndEditOrDeleteExam(examName);
+            }
             return true;
         });
     }
+
 
 
 
@@ -183,6 +207,23 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         return assignments;
     }
 
+    private List<Exam> retrieveExams() {
+        SharedPreferences prefs = getSharedPreferences("Exams", MODE_PRIVATE);
+        Map<String, ?> allEntries = prefs.getAll();
+        List<Exam> exams = new ArrayList<>();
+        Gson gson = new Gson();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            String json = entry.getValue().toString();
+            Type type = new TypeToken<Exam>(){}.getType();
+            Exam exam = gson.fromJson(json, type);
+            exams.add(exam);
+        }
+
+        return exams;
+    }
+
+
 
     private void confirmAndDeleteClass(String courseName) {
         String[] options = {"Edit", "Delete"};
@@ -221,6 +262,28 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void confirmAndEditOrDeleteExam(String examName) {
+        String[] options = {"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Option");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                Intent intent = new Intent(WeekAtAGlanceActivity.this, AddExam.class);
+                intent.putExtra("examName", examName);
+                intent.putExtra("editMode", true);
+                startActivity(intent);
+            } else if (which == 1) {
+                deleteExam(examName);
+            }
+        });
+        builder.show();
+    }
+
+
+
+
+
 
 
 
@@ -239,17 +302,25 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
             editor.remove(assignmentTitle);
             editor.apply();
 
-            populateAssignmentListView();
+            populateListView();
         }
     }
 
+    private void deleteExam(String examName) {
+        SharedPreferences prefs = getSharedPreferences("Exams", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(examName);
+        editor.apply();
+
+        populateListView();
+    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
         populateWeekView();
-        populateAssignmentListView();
+        populateListView();
     }
 
 
