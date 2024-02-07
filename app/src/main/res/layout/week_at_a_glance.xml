@@ -25,7 +25,6 @@
                     android:background="@android:color/darker_gray"
                     android:padding="4dp">
 
-                    <!-- Specify a minimum width for each TextView to ensure they are not too scrunched -->
                     <TextView android:text="Monday" android:padding="4dp" android:minWidth="120dp"/>
                     <TextView android:text="Tuesday" android:padding="4dp" android:minWidth="120dp"/>
                     <TextView android:text="Wednesday" android:padding="4dp" android:minWidth="120dp"/>
@@ -35,7 +34,6 @@
                     <TextView android:text="Sunday" android:padding="4dp" android:minWidth="120dp"/>
                 </TableRow>
 
-                <!-- Dynamic rows will be added here -->
             </TableLayout>
         </HorizontalScrollView>
     </ScrollView>

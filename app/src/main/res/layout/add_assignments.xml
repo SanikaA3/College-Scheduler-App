@@ -38,7 +38,6 @@
         android:layout_below="@id/editAssignmentTime"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Label for the Associated Class spinner -->
     <TextView
         android:id="@+id/labelAssociatedClass"
         android:layout_width="wrap_content"
