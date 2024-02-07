@@ -88,7 +88,7 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
             ClassDetails classDetail = classes.get(i);
             TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            row.setPadding(0, 0, 0, 20); // Add padding below each row for better separation
+            row.setPadding(0, 0, 0, 20);
 
             row.setTag(classDetail.getCourseName());
 
