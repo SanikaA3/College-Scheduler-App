@@ -127,7 +127,7 @@ public class WeekAtAGlanceActivity extends AppCompatActivity {
         List<Exam> exams = retrieveExams();
         List<ToDoTask> toDoTasks = retrieveToDoTasks();
         List<String> listViewItems = new ArrayList<>();
-        final List<String> itemTypes = new ArrayList<>(); // Keep track of whether an item is an assignment or an exam
+        List<String> itemTypes = new ArrayList<>();
         for (ToDoTask task : toDoTasks) {
             listViewItems.add("Task: " + task.getTaskDescription());
             itemTypes.add("Task");
